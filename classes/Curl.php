@@ -262,6 +262,15 @@ class Curl
         $this->setopt(CURLOPT_FILE, $file_handle);
     }
 
+    /**
+     * Set referer header
+     *
+     * @param string $referer
+     */
+    public function set_referer($referer)
+    {
+        $this->setopt(CURLOPT_REFERER, $referer);
+    }
 
     /**
      * open_cookie
