@@ -29,6 +29,13 @@ class Curl {
 	protected $headers_received;
 
     /**
+     * An associative array of headers to send along with requests
+     *
+     * @var array
+     **/
+    public $headers = array();
+
+    /**
      * Cookie file.
      *
      * @var string
@@ -103,6 +110,22 @@ class Curl {
 		curl_setopt($this->ch, CURLOPT_URL, $url);
 	}
 
+    /**
+     * Formats and adds custom headers to the current request
+     *
+     * @return void
+     * @access protected
+     **/
+    protected function set_request_headers()
+    {
+        $headers = array();
+        foreach ($this->headers as $key => $value)
+        {
+            $headers[] = $key . ': ' . $value;
+        }
+        $this->setopt(CURLOPT_HTTPHEADER, $headers);
+    }
+
 	/**
 	 * Execute request
 	 * @param string $url
@@ -114,6 +137,8 @@ class Curl {
 		if ($url !== null) {
 			$this->set_url($url);
 		}
+
+        $this->set_request_headers();
 
 		// Received headers must be retrieved
 		if($this->fetch_headers) {
@@ -127,18 +152,29 @@ class Curl {
 			// set curl to NOT return headers
 			$this->setopt(CURLOPT_HEADER, false);
 
-			// Seperate header from body
-			echo $result;
-			$pos = strpos("\n\n", $result);
+            $pattern = '#HTTP/\d\.\d.*?$.*?\r\n\r\n#ims';
 
-			if($pos === false) {
-				throw new Exception('No headers received!', 2);
-			}
+            # Extract headers from response
+            preg_match_all($pattern, $result, $matches);
+            $headers_string = array_pop($matches[0]);
+            $headers        = explode("\r\n", str_replace("\r\n\r\n", '', $headers_string));
 
-			$this->headers_received = substr($result, 0, $pos);
+            # Remove headers from the response body
+            $result = str_replace($headers_string, '', $result);
 
-			$result = substr($result, $pos+4, strlen($result)-$pos-4);
+            # Extract the version and status from the first header
+            $version_and_status = array_shift($headers);
+            preg_match('#HTTP/(\d\.\d)\s(\d\d\d)\s(.*)#', $version_and_status, $matches);
+            $this->headers_received['Http-Version'] = $matches[1];
+            $this->headers_received['Status-Code']  = $matches[2];
+            $this->headers_received['Status']       = $matches[2] . ' ' . $matches[3];
 
+            # Convert headers into an associative array
+            foreach ($headers as $header)
+            {
+                preg_match('#(.*?)\:\s(.*)#', $header, $matches);
+                $this->headers_received[$matches[1]] = $matches[2];
+            }
 		}
 		else {
 			// Executes the request
