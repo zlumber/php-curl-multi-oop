@@ -145,7 +145,7 @@ Class Curl_Multi
                 throw new Exception('cURL select failure or timeout.');
             }
         }
-        
+
         curl_multi_close($this->mch);
     }
 }

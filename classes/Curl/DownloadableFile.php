@@ -8,12 +8,12 @@
  *
  * // Add files to queue
  * $files = array(
- *		'http://www.bildites.lv/images/thjoo72thgbe1zchm29.jpg',
- *		'http://www.bildites.lv/images/ldkdbsfypmu02h8s256.jpg',
- *		'http://www.bildites.lv/images/icujtts8m2xpm9j4cvzo.jpg',
- *		'http://www.bildites.lv/images/5lno9l1sncshe2f8gos.jpg',
- *		'http://www.bildites.lv/images/d4qgj1lbv1nnf81ahtb.jpg',
- *		);
+ *        'http://www.bildites.lv/images/thjoo72thgbe1zchm29.jpg',
+ *        'http://www.bildites.lv/images/ldkdbsfypmu02h8s256.jpg',
+ *        'http://www.bildites.lv/images/icujtts8m2xpm9j4cvzo.jpg',
+ *        'http://www.bildites.lv/images/5lno9l1sncshe2f8gos.jpg',
+ *        'http://www.bildites.lv/images/d4qgj1lbv1nnf81ahtb.jpg',
+ *        );
  * foreach ($files as $file)
  * {
  *     $file_to_download = new DownloadableFile($download_directory, $file);
