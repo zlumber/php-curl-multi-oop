@@ -9,24 +9,25 @@
  * @link     https://github.com/martinsbalodis/php-curl-multi-oop
  */
 class Curl_Browser_GoogleChrome extends Curl {
-	
-	public function __construct() {
-		
+
+	public function __construct($use_cookie = false) {
+
 		// initialize curl
-		parent::__construct();
-		
+		parent::__construct($use_cookie);
+
 		// Sent headers will be saved
 		$this->setopt(CURLINFO_HEADER_OUT, true);
-		
+
 		// Chrome user agent
-		$this->setopt(CURLOPT_USERAGENT, "User-Agent:Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.5 Safari/535.2");
-		
+		$this->setopt(CURLOPT_USERAGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.15 Safari/537.1");
+
 		// Follow redirects. This is limited to 4 redirects
 		$this->setopt(CURLOPT_FOLLOWLOCATION, true);
 		$this->setopt(CURLOPT_MAXREDIRS, 4);
-		
-		// The contents of the "Accept-Encoding: " header. This enables decoding of the response. Supported encodings are "identity", "deflate", and "gzip". If an empty string, "", is set, a header containing all supported encoding types is sent. 
+
+		// The contents of the "Accept-Encoding: " header. This enables decoding of the response. Supported encodings are "identity", "deflate", and "gzip". If an empty string, "", is set, a header containing all supported encoding types is sent.
 		$this->setopt(CURLOPT_ENCODING, '');
-	}
+
+        $this->set_fetch_headers();
+    }
 }
-?>
