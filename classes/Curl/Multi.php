@@ -114,7 +114,7 @@ Class Curl_Multi
                     {
 
                         // Find corresponding resource.
-                        foreach ($this->jobs as $job)
+                        foreach ($this->jobs as $i => $job)
                         {
 
                             /* @var $job Curl_MultiReady */
@@ -124,12 +124,18 @@ Class Curl_Multi
                                 // handle found
                                 $job->executed();
 
+                                curl_multi_remove_handle($this->mch, $this->jobs[$i]->get_handle());
+
+                                if (count($this->jobs_in_queue) > 0)
+                                {
+                                    $this->jobs[$i] = array_pop($this->jobs_in_queue);
+                                    curl_multi_add_handle($this->mch, $this->jobs[$i]->get_handle());
+                                }
+
                                 break;
                             }
                         }
                     }
-
-                    // @TODO add new jobs from queue
 
                 }
                 while ($mrc == CURLM_CALL_MULTI_PERFORM);
@@ -139,5 +145,7 @@ Class Curl_Multi
                 throw new Exception('cURL select failure or timeout.');
             }
         }
+        
+        curl_multi_close($this->mch);
     }
 }
