@@ -1,5 +1,30 @@
 <?php
 
+/**
+ * Example:
+ *
+ * $multi_curl = new Curl_Multi();
+ * $download_directory = 'downloads/'
+ *
+ * // Add files to queue
+ * $files = array(
+ *		'http://www.bildites.lv/images/thjoo72thgbe1zchm29.jpg',
+ *		'http://www.bildites.lv/images/ldkdbsfypmu02h8s256.jpg',
+ *		'http://www.bildites.lv/images/icujtts8m2xpm9j4cvzo.jpg',
+ *		'http://www.bildites.lv/images/5lno9l1sncshe2f8gos.jpg',
+ *		'http://www.bildites.lv/images/d4qgj1lbv1nnf81ahtb.jpg',
+ *		);
+ * foreach ($files as $file)
+ * {
+ *     $file_to_download = new DownloadableFile($download_directory, $file);
+ *     $file_to_download->set_referer('http://www.bildites.lv/');
+ *     $file_to_download->headers['Host'] = 'www.bildites.lv';
+ *     $multi_curl->add_job($file_to_download);
+ * }
+ *
+ * // Download all files at the same time.
+ * $multi_curl->exec();
+ */
 class DownloadableFile extends Curl implements Curl_MultiReady
 {
     public function __construct($download_directory, $url)
